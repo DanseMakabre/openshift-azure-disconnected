@@ -1,1 +1,3 @@
 # openshift-azure-disconnected
+
+Just a playground yet...
