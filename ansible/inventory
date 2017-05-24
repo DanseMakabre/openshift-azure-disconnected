@@ -1,0 +1,9 @@
+[masternodes]
+master.example.com
+
+[infranodes]
+infra.example.com
+
+[nodes]
+node1.example.com
+node2.example.com
