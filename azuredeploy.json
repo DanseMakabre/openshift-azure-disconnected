@@ -1,4 +1,3 @@
-
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
@@ -44,22 +43,42 @@
             "type": "String"
         },
         "virtualMachines_infra_name": {
-            "defaultValue": "infra.example.com",
+            "defaultValue": "infra",
             "type": "String"
         },
         "virtualMachines_master_name": {
-            "defaultValue": "master.example.com",
+            "defaultValue": "master",
             "type": "String"
         },
         "virtualMachines_node1_name": {
-            "defaultValue": "node1.example.com",
+            "defaultValue": "node1",
             "type": "String"
         },
         "virtualMachines_node2_name": {
-            "defaultValue": "node2.example.com",
+            "defaultValue": "node2",
             "type": "String"
         },
         "virtualMachines_service_name": {
+            "defaultValue": "service",
+            "type": "String"
+        },
+        "virtualMachines_infra_hostname": {
+            "defaultValue": "infra.example.com",
+            "type": "String"
+        },
+        "virtualMachines_master_hostname": {
+            "defaultValue": "master.example.com",
+            "type": "String"
+        },
+        "virtualMachines_node1_hostname": {
+            "defaultValue": "node1.example.com",
+            "type": "String"
+        },
+        "virtualMachines_node2_hostname": {
+            "defaultValue": "node2.example.com",
+            "type": "String"
+        },
+        "virtualMachines_service_hostname": {
             "defaultValue": "service.example.com",
             "type": "String"
         },
@@ -175,7 +194,7 @@
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[parameters('virtualMachines_infra_name')]",
+                    "computerName": "[parameters('virtualMachines_infra_hostname')]",
                     "adminUsername": "cloudadmin",
                     "adminPassword": "[parameters('adminPassword')]",
                     "linuxConfiguration": {
@@ -237,7 +256,7 @@
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[parameters('virtualMachines_master_name')]",
+                    "computerName": "[parameters('virtualMachines_master_hostname')]",
                     "adminUsername": "cloudadmin",
                     "adminPassword": "[parameters('adminPassword')]",
                     "linuxConfiguration": {
@@ -299,7 +318,7 @@
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[parameters('virtualMachines_node1_name')]",
+                    "computerName": "[parameters('virtualMachines_node1_hostname')]",
                     "adminUsername": "cloudadmin",
                     "adminPassword": "[parameters('adminPassword')]",
                     "linuxConfiguration": {
@@ -361,7 +380,7 @@
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[parameters('virtualMachines_node2_name')]",
+                    "computerName": "[parameters('virtualMachines_node2_hostname')]",
                     "adminUsername": "cloudadmin",
                     "adminPassword": "[parameters('adminPassword')]",
                     "linuxConfiguration": {
@@ -413,7 +432,7 @@
                     "dataDisks": []
                 },
                 "osProfile": {
-                    "computerName": "[parameters('virtualMachines_service_name')]",
+                    "computerName": "[parameters('virtualMachines_service_hostname')]",
                     "adminUsername": "cloudadmin",
                     "adminPassword": "[parameters('adminPassword')]",
                     "linuxConfiguration": {
@@ -440,11 +459,11 @@
             "resources": [
                 {
                     "type": "extensions",
-                    "name": "distribute_keys",
+                    "name": "installoscp",
                     "apiVersion": "2015-06-15",
                     "location": "[resourceGroup().location]",
                     "tags": {
-                        "displayName": "distributesshkey"
+                        "displayName": "installoscp"
                     },
                     "dependsOn": [
                         "[parameters('virtualMachines_service_name')]",
@@ -460,62 +479,13 @@
                         "autoUpgradeMinorVersion": true,
                         "settings": {
                             "fileUris": [
-                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/distribute_keys.sh",
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/customscript.sh",
                                 "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/inventory",
                                 "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp_prereqs.yml",
-                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp.repo"
-                            ],
-                            "commandToExecute": "sh distribute_keys.sh 'r3dh4t1!'"
-                        }
-                    }
-                },
-                {
-                    "type": "extensions",
-                    "name": "ansible_prereqs",
-                    "apiVersion": "2015-06-15",
-                    "location": "[resourceGroup().location]",
-                    "tags": {
-                        "displayName": "ansibleprereqs"
-                    },
-                    "dependsOn": [
-                        "distribute_keys"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.Azure.Extensions",
-                        "type": "CustomScript",
-                        "typeHandlerVersion": "2.0",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "fileUris": [
-                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/inventory",
-                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp_prereqs.yml",
-                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp.repo"
-                            ],
-                            "commandToExecute": "ansible-playbook -i /var/lib/waagent/custom-script/download/1/inventory /var/lib/waagent/custom-script/download/1/oscp_prereqs.yml"
-                        }
-                    }
-                },
-                {
-                    "type": "extensions",
-                    "name": "ansible_oscp",
-                    "apiVersion": "2015-06-15",
-                    "location": "[resourceGroup().location]",
-                    "tags": {
-                        "displayName": "ansibleoscp"
-                    },
-                    "dependsOn": [
-                        "ansible_prereqs"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.Azure.Extensions",
-                        "type": "CustomScript",
-                        "typeHandlerVersion": "2.0",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "fileUris": [
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp.repo",
                                 "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp_inventory"
                             ],
-                            "commandToExecute": "ansible-playbook -i /var/lib/waagent/custom-script/download/2/oscp_inventory /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml"
+                            "commandToExecute": "sh customscript.sh 'r3dh4t1!'"
                         }
                     }
                 }
