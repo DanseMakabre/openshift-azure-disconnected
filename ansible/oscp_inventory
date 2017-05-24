@@ -22,6 +22,6 @@ master.example.com
 
 # host group for nodes, includes region info
 [nodes]
-infranode.example.com openshift_node_labels="{'region': 'infra', 'zone': 'infranodes'}"
+infra.example.com openshift_node_labels="{'region': 'infra', 'zone': 'infranodes'}"
 node1.example.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 node2.example.com openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
