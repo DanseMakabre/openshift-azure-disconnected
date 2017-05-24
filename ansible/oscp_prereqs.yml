@@ -1,0 +1,35 @@
+---
+- hosts: all
+  tasks:
+  - name: Deploy repo config
+    copy:
+      src: oscp.repo
+      dest: /etc/yum.repos.d/
+  - name: Install needed packages    
+    yum:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - wget 
+      - git 
+      - net-tools 
+      - bind-utils 
+      - iptables-services 
+      - bridge-utils 
+      - bash-completion
+      - atomic-openshift-utils
+  - name: Install docker  
+    yum:
+      name: docker
+      state: present
+  #- name: Copy storage config
+  #  copy: 
+  #    src: docker-storage-setup
+  #    dest: /etc/sysconfig/docker-storage-setup
+  #- name: Setup docker storage    
+  #  command: docker-storage-setup
+  - name: Enable and start docker    
+    service: 
+      name: docker 
+      state: started
+      enabled: yes
