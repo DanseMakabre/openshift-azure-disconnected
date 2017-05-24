@@ -1,1 +1,866 @@
 
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "adminPassword": {
+            "defaultValue": "Goetzrieger123",
+            "type": "String"
+        },
+        "disks_infra_name": {
+            "defaultValue": "infra",
+            "type": "String"
+        },
+        "disks_infra_disk2_name": {
+            "defaultValue": "infra_disk2",
+            "type": "String"
+        },
+        "disks_master_name": {
+            "defaultValue": "master",
+            "type": "String"
+        },
+        "disks_master_disk2_name": {
+            "defaultValue": "master_disk2",
+            "type": "String"
+        },
+        "disks_node1_name": {
+            "defaultValue": "node1",
+            "type": "String"
+        },
+        "disks_node1_disk2_name": {
+            "defaultValue": "node1_disk2",
+            "type": "String"
+        },
+        "disks_node2_name": {
+            "defaultValue": "node2",
+            "type": "String"
+        },
+        "disks_node2_disk2_name": {
+            "defaultValue": "node2_disk2",
+            "type": "String"
+        },
+        "disks_service_name": {
+            "defaultValue": "service",
+            "type": "String"
+        },
+        "virtualMachines_infra_name": {
+            "defaultValue": "infra.example.com",
+            "type": "String"
+        },
+        "virtualMachines_master_name": {
+            "defaultValue": "master.example.com",
+            "type": "String"
+        },
+        "virtualMachines_node1_name": {
+            "defaultValue": "node1.example.com",
+            "type": "String"
+        },
+        "virtualMachines_node2_name": {
+            "defaultValue": "node2.example.com",
+            "type": "String"
+        },
+        "virtualMachines_service_name": {
+            "defaultValue": "service.example.com",
+            "type": "String"
+        },
+        "networkInterfaces_infra_name": {
+            "defaultValue": "infra",
+            "type": "String"
+        },
+        "networkInterfaces_master_name": {
+            "defaultValue": "master",
+            "type": "String"
+        },
+        "networkInterfaces_node1_name": {
+            "defaultValue": "node1",
+            "type": "String"
+        },
+        "networkInterfaces_node2_name": {
+            "defaultValue": "node2",
+            "type": "String"
+        },
+        "networkInterfaces_service_name": {
+            "defaultValue": "service",
+            "type": "String"
+        },
+        "networkSecurityGroups_infra_nsg_name": {
+            "defaultValue": "infra-nsg",
+            "type": "String"
+        },
+        "networkSecurityGroups_master_nsg_name": {
+            "defaultValue": "master-nsg",
+            "type": "String"
+        },
+        "networkSecurityGroups_node1_nsg_name": {
+            "defaultValue": "node1-nsg",
+            "type": "String"
+        },
+        "networkSecurityGroups_node2_nsg_name": {
+            "defaultValue": "node2-nsg",
+            "type": "String"
+        },
+        "networkSecurityGroups_service_nsg_name": {
+            "defaultValue": "service-nsg",
+            "type": "String"
+        },
+        "publicIPAddresses_infra_ip_name": {
+            "defaultValue": "infra-ip",
+            "type": "String"
+        },
+        "publicIPAddresses_master_ip_name": {
+            "defaultValue": "master-ip",
+            "type": "String"
+        },
+        "publicIPAddresses_node1_ip_name": {
+            "defaultValue": "node1-ip",
+            "type": "String"
+        },
+        "publicIPAddresses_node2_ip_name": {
+            "defaultValue": "node2-ip",
+            "type": "String"
+        },
+        "publicIPAddresses_service_ip_name": {
+            "defaultValue": "service-ip",
+            "type": "String"
+        },
+        "virtualNetworks_oscpresgrp_vnet_name": {
+            "defaultValue": "oscpresgrp-vnet",
+            "type": "String"
+        },
+        "node_image_id": {
+            "defaultValue": "/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/images/providers/Microsoft.Compute/images/azure-rhel-7.3-35.x86_64.vhd",
+            "type": "String"
+        },
+        "service_image_id": {
+            "defaultValue": "/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/images/providers/Microsoft.Compute/images/oscp-service-v23",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Compute/virtualMachines/infra'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_infra_name')]",
+            "apiVersion": "2016-04-30-preview",
+            "location": "westeurope",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2M_V2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "id": "[parameters('node_image_id')]"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[parameters('virtualMachines_infra_name')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        },
+                        "diskSizeGB": 11
+                    },
+                    "dataDisks": [
+                        {
+                            "lun": 0,
+                            "createOption": "Empty",
+                            "caching": "None",
+                            "managedDisk": {
+                                "storageAccountType": "Standard_LRS"
+                            },
+                            "diskSizeGB": 10
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_infra_name')]",
+                    "adminUsername": "cloudadmin",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_infra_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": false
+                    }
+                }
+            },
+            "dependsOn": [
+               "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_infra_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Compute/virtualMachines/master'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_master_name')]",
+            "apiVersion": "2016-04-30-preview",
+            "location": "westeurope",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2M_V2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "id": "[parameters('node_image_id')]"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[parameters('virtualMachines_master_name')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        },
+                        "diskSizeGB": 11
+                    },
+                    "dataDisks": [
+                        {
+                            "lun": 0,
+                            "createOption": "Empty",
+                            "caching": "None",
+                            "managedDisk": {
+                                "storageAccountType": "Standard_LRS"
+                            },
+                            "diskSizeGB": 10
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_master_name')]",
+                    "adminUsername": "cloudadmin",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_master_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": false
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_master_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Compute/virtualMachines/node1'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_node1_name')]",
+            "apiVersion": "2016-04-30-preview",
+            "location": "westeurope",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2M_V2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "id": "[parameters('node_image_id')]"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[parameters('virtualMachines_node1_name')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        },
+                        "diskSizeGB": 11
+                    },
+                    "dataDisks": [
+                        {
+                            "lun": 0,
+                            "createOption": "Empty",
+                            "caching": "None",
+                            "managedDisk": {
+                                "storageAccountType": "Standard_LRS"
+                            },
+                            "diskSizeGB": 10
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_node1_name')]",
+                    "adminUsername": "cloudadmin",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_node1_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": false
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_node1_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Compute/virtualMachines/node2'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_node2_name')]",
+            "apiVersion": "2016-04-30-preview",
+            "location": "westeurope",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2M_V2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "id": "[parameters('node_image_id')]"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[parameters('virtualMachines_node2_name')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        },
+                        "diskSizeGB": 11
+                    },
+                    "dataDisks": [
+                        {
+                            "lun": 0,
+                            "createOption": "Empty",
+                            "caching": "None",
+                            "managedDisk": {
+                                "storageAccountType": "Standard_LRS"
+                            },
+                            "diskSizeGB": 10
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_node2_name')]",
+                    "adminUsername": "cloudadmin",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_node2_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": false
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_node2_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Compute/virtualMachines/service'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_service_name')]",
+            "apiVersion": "2016-04-30-preview",
+            "location": "westeurope",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2M_V2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "id": "[parameters('service_image_id')]"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[parameters('virtualMachines_service_name')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        },
+                        "diskSizeGB": 11
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_service_name')]",
+                    "adminUsername": "cloudadmin",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_service_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": false
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_service_name'))]"
+            ],
+            "resources": [
+                {
+                    "type": "extensions",
+                    "name": "distribute_keys",
+                    "apiVersion": "2015-06-15",
+                    "location": "[resourceGroup().location]",
+                    "tags": {
+                        "displayName": "distributesshkey"
+                    },
+                    "dependsOn": [
+                        "[parameters('virtualMachines_service_name')]",
+                        "[parameters('virtualMachines_master_name')]",
+                        "[parameters('virtualMachines_infra_name')]",
+                        "[parameters('virtualMachines_node1_name')]",
+                        "[parameters('virtualMachines_node2_name')]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Extensions",
+                        "type": "CustomScript",
+                        "typeHandlerVersion": "2.0",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/distribute_keys.sh",
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/inventory",
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp_prereqs.yml",
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp.repo"
+                            ],
+                            "commandToExecute": "sh distribute_keys.sh 'r3dh4t1!'"
+                        }
+                    }
+                },
+                {
+                    "type": "extensions",
+                    "name": "ansible_prereqs",
+                    "apiVersion": "2015-06-15",
+                    "location": "[resourceGroup().location]",
+                    "tags": {
+                        "displayName": "ansibleprereqs"
+                    },
+                    "dependsOn": [
+                        "distribute_keys"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Extensions",
+                        "type": "CustomScript",
+                        "typeHandlerVersion": "2.0",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/inventory",
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp_prereqs.yml",
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp.repo"
+                            ],
+                            "commandToExecute": "ansible-playbook -i /var/lib/waagent/custom-script/download/1/inventory /var/lib/waagent/custom-script/download/1/oscp_prereqs.yml"
+                        }
+                    }
+                },
+                {
+                    "type": "extensions",
+                    "name": "ansible_oscp",
+                    "apiVersion": "2015-06-15",
+                    "location": "[resourceGroup().location]",
+                    "tags": {
+                        "displayName": "ansibleoscp"
+                    },
+                    "dependsOn": [
+                        "ansible_prereqs"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Extensions",
+                        "type": "CustomScript",
+                        "typeHandlerVersion": "2.0",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "https://raw.githubusercontent.com/goetzrieger/openshift-azure-disconnected/master/ansible/oscp_inventory"
+                            ],
+                            "commandToExecute": "ansible-playbook -i /var/lib/waagent/custom-script/download/2/oscp_inventory /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkInterfaces/infra933'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_infra_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.0.30",
+                            "privateIPAllocationMethod": "Static",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_infra_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name')), '/subnets/default')]"
+                            }
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [
+                        "10.0.0.10"
+                    ]
+                },
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_infra_nsg_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_infra_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_infra_nsg_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkInterfaces/master328'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_master_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.0.20",
+                            "privateIPAllocationMethod": "Static",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_master_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name')), '/subnets/default')]"
+                            }
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [
+                        "10.0.0.10"
+                    ]
+                },
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_master_nsg_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_master_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_master_nsg_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkInterfaces/node1251'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_node1_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.0.40",
+                            "privateIPAllocationMethod": "Static",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_node1_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name')), '/subnets/default')]"
+                            }
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [
+                        "10.0.0.10"
+                        ]
+                },
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_node1_nsg_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_node1_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_node1_nsg_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkInterfaces/node2651'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_node2_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.0.50",
+                            "privateIPAllocationMethod": "Static",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_node2_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name')), '/subnets/default')]"
+                            }
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [
+                        "10.0.0.10"
+                        ]
+                },
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_node2_nsg_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_node2_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_node2_nsg_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkInterfaces/service23'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_service_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.0.10",
+                            "privateIPAllocationMethod": "Static",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_service_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name')), '/subnets/default')]"
+                            }
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_service_nsg_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_service_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_oscpresgrp_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_service_nsg_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkSecurityGroups/infra-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_infra_nsg_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "securityRules": []
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkSecurityGroups/master-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_master_nsg_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "securityRules": []
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkSecurityGroups/node1-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_node1_nsg_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "securityRules": []
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkSecurityGroups/node2-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_node2_nsg_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "securityRules": []
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/networkSecurityGroups/service-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_service_nsg_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "SSH",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/publicIPAddresses/infra-ip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_infra_ip_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/publicIPAddresses/master-ip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_master_ip_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/publicIPAddresses/node1-ip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_node1_ip_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/publicIPAddresses/node2-ip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_node2_ip_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/publicIPAddresses/service-ip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_service_ip_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/d17b794b-8d3b-45f9-815f-639e566b117b/resourceGroups/oscpresgrp/providers/Microsoft.Network/virtualNetworks/oscpresgrp-vnet'.",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virtualNetworks_oscpresgrp_vnet_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "westeurope",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/24"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "default",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24"
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        }
+        
+     ]
+}
