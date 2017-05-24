@@ -1,0 +1,23 @@
+[rhel7]
+baseurl = http://service.example.com/repos/rhel-7-server-rpms/Packages/
+name = RHEL 7
+enabled =1 
+gpgcheck = 0
+
+[rhel7-extras]
+baseurl = http://service.example.com/repos/rhel-7-server-extras-rpms/Packages/
+name = RHEL 7 Extras
+enabled =1
+gpgcheck = 0
+
+[rhel7-ose]
+baseurl = http://service.example.com/repos/rhel-7-server-ose-3.5-rpms/Packages/
+name = RHEL 7 OSE
+enabled =1
+gpgcheck = 0
+
+[rhel7-fast-datapath]
+baseurl = http://service.example.com/repos/rhel-7-fast-datapath-rpms/Packages/
+name = RHEL 7 Fast Datapath
+enabled =1
+gpgcheck = 0
