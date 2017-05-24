@@ -17,7 +17,7 @@ echo "Running Ansible prereq playbook"
 
 ansible-playbook \
   -i /var/lib/waagent/custom-script/download/0/inventory \
-  /var/lib/waagent/custom-script/download/1/oscp_prereqs.yml
+  /var/lib/waagent/custom-script/download/0/oscp_prereqs.yml
   
 echo "running Ansible installer playbook"
   
